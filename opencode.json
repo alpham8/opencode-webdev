@@ -1,0 +1,107 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "openai/mai-coding-default",
+  "provider": {
+    "openai": {
+      "options": {
+        "baseURL": "env(LITELLM_BASE_URL)",
+        "apiKey": "env(LITELLM_API_KEY)"
+      }
+    }
+  },
+  "instructions": [
+    "~/.config/opencode/AGENTS.md",
+    "~/.config/opencode/rules/01-coding-standard.md",
+    "~/.config/opencode/rules/02-security.md",
+    "~/.config/opencode/rules/03-type-system.md",
+    "~/.config/opencode/rules/04-clean-code.md",
+    "~/.config/opencode/rules/05-complexity.md",
+    "~/.config/opencode/rules/06-maintainability.md",
+    "~/.config/opencode/rules/07-js-ts-tooling.md",
+    "~/.config/opencode/rules/08-vue-svelte.md",
+    "~/.config/opencode/rules/09-testing.md",
+    "~/.config/opencode/rules/10-environment.md",
+    "~/.config/opencode/rules/11-boundaries.md",
+    "~/.config/opencode/rules/12-performance.md",
+    "~/.config/opencode/rules/13-database.md",
+    "~/.config/opencode/rules/14-dependencies.md",
+    "~/.config/opencode/rules/15-observability.md",
+    "~/.config/opencode/rules/16-accessibility.md",
+    "~/.config/opencode/rules/17-i18n.md",
+    "~/.config/opencode/rules/18-git-workflow.md",
+    "~/.config/opencode/rules/19-css.md"
+  ],
+  "skills": {
+    "paths": ["~/.config/opencode/skills"]
+  },
+  "permission": {
+    "bash": {
+      "git push*":                      "deny",
+      "git commit":                     "deny",
+      "flatpak install*":               "deny",
+      "snap install*":                  "deny",
+      "pip install*":                   "deny",
+      "pip3 install*":                  "deny",
+      "npm install -g*":                "deny",
+      "cargo install*":                 "deny",
+      "gem install*":                   "deny",
+      "sudo rpm*":                      "deny",
+      "sudo systemctl*":                "deny",
+      "sudo rm*":                       "deny",
+      "sudo chmod*":                    "deny",
+      "sudo chown*":                    "deny",
+      "sudo dd*":                       "deny",
+      "sudo mkfs*":                     "deny",
+      "sudo fdisk*":                    "deny",
+      "sudo parted*":                   "deny",
+      "sudo passwd*":                   "deny",
+      "sudo userdel*":                  "deny",
+      "sudo groupdel*":                 "deny",
+      "sudo visudo*":                   "deny",
+      "sudo crontab*":                  "deny",
+      "sudo mount*":                    "deny",
+      "sudo umount*":                   "deny",
+      "sudo iptables*":                 "deny",
+      "sudo firewall-cmd --permanent*": "deny",
+      "sudo sysctl -w*":                "deny",
+      "rm -rf /*":                      "deny",
+      "*":                              "allow"
+    }
+  },
+  "mcp": {
+    "context7": {
+      "type": "local",
+      "command": ["npx", "-y", "@upstash/context7-mcp"]
+    },
+    "playwright-chromium": {
+      "type": "local",
+      "command": ["npx", "@playwright/mcp@latest", "--browser", "chromium"]
+    },
+    "playwright-firefox": {
+      "type": "local",
+      "command": ["npx", "@playwright/mcp@latest", "--browser", "firefox"]
+    },
+    "mysql": {
+      "type": "local",
+      "command": ["npx", "-y", "@benborla29/mcp-server-mysql"],
+      "env": {
+        "MYSQL_HOST": "127.0.0.1",
+        "MYSQL_PORT": "3306",
+        "MYSQL_USER": "db",
+        "MYSQL_PASS": "db",
+        "MYSQL_DB": "",
+        "ALLOW_INSERT_OPERATION": "false",
+        "ALLOW_UPDATE_OPERATION": "false",
+        "ALLOW_DELETE_OPERATION": "false"
+      }
+    },
+    "github": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      }
+    }
+  },
+  "compaction": { "auto": true, "tail_turns": 15 }
+}

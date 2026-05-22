@@ -32,7 +32,7 @@
     "~/.config/opencode/rules/19-css.md"
   ],
   "skills": {
-    "paths": ["~/.config/opencode/skills"]
+    "paths": ["~/.config/opencode/skills", "~/.config/opencode/skills/wondelai"]
   },
   "permission": {
     "bash": {

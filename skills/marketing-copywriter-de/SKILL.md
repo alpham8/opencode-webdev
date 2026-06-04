@@ -167,6 +167,23 @@ Nie mehr als drei Sätze gleicher Länge hintereinander.
 
 ---
 
+## SEO-Pflichten
+
+**REQUIRED SUB-SKILL:** Bei Landing Pages, Service-Seiten und allen indexierbaren Seiten immer `seo` laden und einhalten.
+
+Kurzfassung der wichtigsten Limits (Details im SEO-Skill):
+
+| Element | Limit |
+|---|---|
+| Title-Tag | 50-60 Zeichen, Wunschergebnis + Keyword, ≤580 px |
+| Meta-Description | 120-158 Zeichen, CTA enthalten, Nutzen in den ersten 120 Zeichen |
+| H1 | Genau eine pro Seite, enthält Primary Keyword |
+| URL/Slug | 3-5 Wörter, Kleinbuchstaben, Bindestriche, Umlaute umschreiben |
+| Open Graph | og:title ≤60 Zeichen, og:image 1200×630 px, og:description 130-160 Zeichen |
+| Schema.org | JSON-LD mit passendem Typ (WebPage, Service, FAQPage) |
+
+Die Headline auf der Seite (H1) darf emotionaler und länger sein als der Title-Tag in den SERPs. Beide müssen aber das Primary Keyword enthalten.
+
 ## Selbst-Check
 
 - [ ] Headline nennt das Wunschergebnis, nicht das Produkt
@@ -178,3 +195,8 @@ Nie mehr als drei Sätze gleicher Länge hintereinander.
 - [ ] Kein Satz beginnt mit verbotenem Übergangs-Adverb
 - [ ] Satzlänge variiert sichtbar
 - [ ] Ansprache konsistent: entweder „Sie" oder „Du" — nie beides
+- [ ] Title-Tag ≤60 Zeichen, Keyword + Wunschergebnis
+- [ ] Meta-Description 120-158 Zeichen, Nutzen in ersten 120 Zeichen
+- [ ] Genau eine H1, Heading-Hierarchie sequentiell
+- [ ] URL/Slug kurz, keyword-basiert, Umlaute als ae/oe/ue/ss
+- [ ] Open Graph Tags gesetzt (og:title, og:image, og:description)

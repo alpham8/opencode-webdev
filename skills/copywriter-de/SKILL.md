@@ -83,6 +83,22 @@ Spezifisch, nicht generisch:
 
 Maximal 3–4 Sätze pro Absatz. Längere Blöcke wirken wie AI-Output und werden übersprungen.
 
+## SEO-Pflichten
+
+**REQUIRED SUB-SKILL:** Bei Blog- und Webseitentexten immer `seo` laden und einhalten.
+
+Kurzfassung der wichtigsten Limits (Details im SEO-Skill):
+
+| Element | Limit |
+|---|---|
+| Title-Tag | 50-60 Zeichen, Keyword vorne, ≤580 px |
+| Meta-Description | 120-158 Zeichen, CTA enthalten |
+| H1 | Genau eine pro Seite, enthält Primary Keyword |
+| URL/Slug | 3-5 Wörter, Kleinbuchstaben, Bindestriche, Umlaute umschreiben |
+| Absatz-Headlines (H2/H3) | Sequentiell verschachtelt, keine Ebenen überspringen |
+
+Sub-Headlines sind Aussagen (siehe oben) UND enthalten semantisch relevante Keywords.
+
 ## Selbst-Check vor Abgabe
 
 - [ ] Erster Satz nennt den Nutzen, keine Einleitung
@@ -92,3 +108,7 @@ Maximal 3–4 Sätze pro Absatz. Längere Blöcke wirken wie AI-Output und werde
 - [ ] Keine Aufzählung mit bloßen Substantiven
 - [ ] Jede Behauptung ist konkret oder belegt
 - [ ] CTAs sind spezifisch
+- [ ] Title-Tag ≤60 Zeichen, Primary Keyword vorne
+- [ ] Meta-Description 120-158 Zeichen mit CTA
+- [ ] Genau eine H1, Heading-Hierarchie eingehalten
+- [ ] URL/Slug kurz, keyword-basiert, Umlaute als ae/oe/ue/ss

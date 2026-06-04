@@ -23,6 +23,7 @@ A single instruction file is not the right approach for implementing all rules a
 - **Accessibility** — WCAG 2.1 AA checklist, keyboard navigation, ARIA, form accessibility
 - **19 Coding Rules** — PSR-12 baseline, security, type safety, clean code, performance, testing, git workflow, CSS Box Model ordering
 - **3 German Writing Skills** — Technical colleague voice, product copywriter, marketing copywriter (sales-psychology, trust ladder, anti-AI-slop)
+- **SEO Skill** — On-page SEO reference for blog posts and landing pages: SERP limits (title, meta, slug), heading hierarchy, image SEO, structured data (BlogPosting, BreadcrumbList, FAQPage), Open Graph, E-E-A-T, Core Web Vitals, German SEO specifics (umlauts, Flesch DE, hreflang DACH)
 - **Hook Plugin** — Format-on-save, static analysis, type checking, destructive command guard (single TypeScript plugin)
 
 ## What's Included
@@ -69,6 +70,7 @@ The `plugins/hooks.ts` file implements four safety and quality hooks in a single
 | `tech-colleague-de` | German technical writing voice: PR descriptions, READMEs, bug reports, technical emails. Direct, specific, no filler. Anti-AI-slop rules (no em dash, no uniform sentence length, no passive-as-courtesy). |
 | `copywriter-de` | German product copywriter: product descriptions, feature announcements, technical blog posts. Benefit-first, concrete numbers, specific CTAs. Anti-AI-slop pattern kills. |
 | `marketing-copywriter-de` | German sales copywriter for non-technical readers: homepage, landing pages, booking pages. 7-step trust ladder (AIDA/PAS/BAB), CRAVENS social proof, objection removal, micro-commitment CTAs. Sales-psychology-driven structure. |
+| `seo` | On-page SEO reference: SERP pixel/character limits (title, meta description, slug), heading hierarchy, image SEO, internal/external linking, content structure, structured data (BlogPosting, BreadcrumbList, FAQPage), Open Graph, E-E-A-T, Core Web Vitals, XML sitemap, content freshness, German SEO (umlauts, Flesch DE, hreflang DACH). Includes full blog post checklist. |
 | `wondelai/clean-code` | Clean Code principles (Martin) |
 | `wondelai/clean-architecture` | Clean Architecture (Martin) |
 | `wondelai/domain-driven-design` | DDD building blocks, bounded contexts |
@@ -325,6 +327,7 @@ If you find this useful, please go and star their original repositories first.
 | `ui-animation-engineering` | Based on [Emil Kowalski](https://emilkowal.ski/)'s design engineering writing (Sonner, Vaul) |
 | `content-testing` | Authored for this repo |
 | `tech-colleague-de`, `copywriter-de`, `marketing-copywriter-de` | Authored for this repo — see *Writing Skills* sources below |
+| `seo` | Authored for this repo — see *SEO Skill* sources below |
 | `php`, `symfony`, `symfony-project-setup`, `shopware`, `shopware-ddev`, `shopware-utils`, `vue`, `svelte`, `typescript`, `csharp`, `aspnet-core`, `ddev-development` | Authored for this repo, distilled from each project's official documentation |
 
 ### Writing Skills — Research Sources
@@ -340,6 +343,68 @@ The `rules/19-css.md` and the three German writing skills (`tech-colleague-de`, 
 - [PAS Framework (SaasFunnelLab)](https://www.saasfunnellab.com/essay/pas-copywriting-framework/) — Problem → Agitation → Solution structure
 - [Social Proof & CRAVENS model (CXL)](https://cxl.com/blog/is-social-proof-really-that-important/) — Credible, Relevant, Attractive, Visual, Enumerated, Nearby, Specific
 - [Landing Page Copywriting Tips (Jeremy Mac)](https://www.jeremymac.com/blogs/news/20-landing-page-copywriting-tips-that-convert-like-crazy-in-2025-beginner-friendly) — specificity, micro-commitments, hesitation removal
+
+### SEO Skill — Research Sources
+
+The `seo` skill was compiled from Google's official documentation and leading SEO industry sources (2025-2026):
+
+**Google Official Documentation:**
+- [Google Search Central — Article Structured Data](https://developers.google.com/search/docs/appearance/structured-data/article)
+- [Google Search Central — URL Structure](https://developers.google.com/search/docs/crawling-indexing/url-structure)
+- [Google Search Central — Mobile-First Indexing](https://developers.google.com/search/docs/crawling-indexing/mobile/mobile-sites-mobile-first-indexing)
+- [Google Search Central — Helpful Content](https://developers.google.com/search/docs/fundamentals/creating-helpful-content)
+- [Google Search Central — Hreflang](https://developers.google.com/search/docs/specialty/international/localized-versions)
+- [Google Search Central — Google Images Best Practices](https://developers.google.com/search/docs/appearance/google-images)
+
+**Title & Meta Description:**
+- [Zyppy — Meta Title Tag Length](https://zyppy.com/title-tags/meta-title-tag-length/) — character and pixel measurements
+- [Search Engine Land — Title Tag Length](https://searchengineland.com/title-tag-length-388468) — desktop/mobile pixel limits
+- [The Ocean Marketing — Title Tag Length Best Practices](https://theoceanmarketing.com/blog/title-tag-length-for-seo-best-practices/)
+- [Scalenut — Meta Title Length Best Practices 2026](https://www.scalenut.com/blogs/meta-title-length-best-practices-2026)
+- [MRS Digital — Meta Length Checker](https://mrs.digital/tools/meta-length-checker/) — pixel width tool
+
+**Content Structure & Readability:**
+- [SEO.co — Content Length](https://seo.co/content-length/) — word count benchmarks by content type
+- [Lovable.dev — Blog Post Length Guide](https://lovable.dev/guides/how-long-should-blog-post-be-data-backed-guide) — data-backed length analysis
+- [Yoast — Flesch Reading Ease Score](https://yoast.com/flesch-reading-ease-score/) — readability scoring
+- [Yoast — How to Use Headings](https://yoast.com/how-to-use-headings-on-your-site/) — heading hierarchy rules
+- [Conductor — Headings for SEO](https://www.conductor.com/academy/headings/) — semantic heading structure
+
+**URL & Slug:**
+- [Slug Genius — URL Slug Best Practices](https://sluggenius.com/blog/url-slug-best-practices) — length, format, keyword placement
+- [Shopify — SEO-Friendly URLs](https://www.shopify.com/blog/seo-url)
+
+**Structured Data & Open Graph:**
+- [Search Engine Zine — Article vs Blog Schema](https://searchenginezine.com/technical/schema/article-vs-blog-schema/) — BlogPosting vs Article schema
+- [Open Graph Protocol](https://ogp.me/) — OG specification
+- [Ahrefs — Open Graph Meta Tags](https://ahrefs.com/blog/open-graph-meta-tags/) — practical OG guide
+
+**Image SEO:**
+- [AltText.ai — Image Alt Text SEO Best Practices](https://alttext.ai/blog/image-alt-text-seo-best-practices) — alt text length and AI citations
+- [Digital Applied — Image SEO Guide 2026](https://www.digitalapplied.com/blog/image-seo-complete-optimization-guide-2026) — format priority, lazy loading
+
+**Internal Linking:**
+- [Upward Engine — Internal Linking Best Practices](https://upwardengine.com/internal-linking-best-practices-seo/) — density and link equity
+- [Traffic Think Tank — Internal Linking](https://trafficthinktank.com/internal-linking-best-practices/) — anchor text strategy
+
+**Core Web Vitals:**
+- [CoreWebVitals.io](https://www.corewebvitals.io/core-web-vitals) — current pass rate data
+- [Mewa Studio — SEO Core Web Vitals 2026](https://www.mewastudio.com/en/blog/seo-core-web-vitals-2026) — INP, LCP, CLS thresholds
+
+**E-E-A-T:**
+- [BKND Development — EEAT SEO Strategy 2026](https://www.bknddevelopment.com/seo-insights/eeat-seo-strategy-2026-content-quality-signals/) — content quality signals
+- [Search Engine Land — Google E-E-A-T for SEO](https://searchengineland.com/guide/google-e-e-a-t-for-seo) — comprehensive E-E-A-T guide
+
+**German SEO:**
+- [WebCertain — Umlauts in German SEO](https://blog.webcertain.com/do-umlauts-matter-how-to-handle-the-most-annoying-characters-in-german-seo-2/10/04/2014/) — umlaut handling in URLs
+- [Nikolai Sroka — Flesch Index Lesbarkeit](https://nikolai-sroka.de/flesch-index-lesbarkeit-verbessern/) — German Flesch adaptation
+- [Seokratie — SEO-Faktor Lesbarkeit](https://www.seokratie.de/seo-faktor-lesbarkeit/) — readability as ranking factor
+- [Outreach Monks — Hreflang SEO](https://outreachmonks.com/hreflang-seo/) — DACH hreflang implementation
+
+**Existing Claude Code SEO Skills (inspiration):**
+- [AgriciDaniel/claude-seo](https://github.com/AgriciDaniel/claude-seo) — universal SEO skill with 25 sub-skills
+- [aaron-he-zhu/seo-geo-claude-skills](https://github.com/aaron-he-zhu/seo-geo-claude-skills) — 20 SEO & GEO skills with CORE-EEAT framework
+- [aevans-eng/seo-skill](https://github.com/aevans-eng/seo-skill) — lightweight SEO skill for static sites
 
 ---
 

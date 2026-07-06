@@ -1,0 +1,4 @@
+Vendored from: anthropics/claude-plugins-official — security-guidance v2.0.6
+Only the pattern-warning layer (PostToolUse regex) is used in opencode;
+the LLM diff-review layers are disabled via ENABLE_CODE_SECURITY_REVIEW=0
+and ENABLE_COMMIT_REVIEW=0 (set by plugins/hooks.ts).

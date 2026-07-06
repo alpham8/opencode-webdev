@@ -4,8 +4,8 @@
   "provider": {
     "openai": {
       "options": {
-        "baseURL": "env(LITELLM_BASE_URL)",
-        "apiKey": "env(LITELLM_API_KEY)"
+        "baseURL": "{env:LITELLM_BASE_URL}",
+        "apiKey": "{env:LITELLM_API_KEY}"
       }
     }
   },
@@ -99,7 +99,7 @@
       "type": "local",
       "command": ["npx", "-y", "@modelcontextprotocol/server-github"],
       "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "{env:GITHUB_TOKEN}"
       }
     }
   },

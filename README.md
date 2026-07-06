@@ -33,20 +33,33 @@ A single instruction file is not the right approach for implementing all rules a
 | `AGENTS.md` | Global engineering baseline (coding standards, workflow rules) |
 | `opencode.json` | Provider config (LiteLLM), permissions, MCP servers, skill paths |
 | `rules/` | 19 rule files referenced from AGENTS.md |
-| `skills/` | 18 domain-specific skills + 24 wondelai knowledge skills |
-| `plugins/hooks.ts` | Hook plugin (format-on-save, guard-bash, phpstan, tsc) |
+| `skills/` | 29 domain & process skills + 24 wondelai knowledge skills |
+| `plugins/hooks.ts` | Self-contained hook plugin (guard-bash, format, phpstan, tsc) + optional file-guard, static-analysis and self-review hooks |
+| `hooks/security-guidance/` | Vendored security-guidance pattern hooks (optional, needs python3) |
 | `install.sh` | One-shot installer into `~/.config/opencode` |
 
 ### Hook Plugin
 
-The `plugins/hooks.ts` file implements four safety and quality hooks in a single TypeScript module:
+The `plugins/hooks.ts` file is a single TypeScript module with a **self-contained core** (no external dependencies) plus an **optional layer** that activates only when the extra tooling is present. Everything fails open, so the core keeps working standalone.
+
+**Self-contained core:**
 
 | Hook | Trigger | Effect |
 |---|---|---|
 | `guardBash` | Before every Bash command | Blocks destructive patterns (`rm -rf /`, `dd of=/dev/…`, force-push to main, etc.) |
 | `formatOnSave` | After Write / Edit | Runs PHP-CS-Fixer (PHP) or Prettier (TS/JS/Vue/CSS) if available in project |
-| `phpstanCheck` | After Write / Edit on `*.php` | Runs PHPStan if `vendor/bin/phpstan` exists (non-blocking warning) |
-| `tscCheck` | After Write / Edit on `*.ts` / `*.tsx` | Runs TypeScript type-check if `tsconfig.json` exists (non-blocking warning) |
+| `phpstanCheck` | After Write / Edit on `*.php` | Runs PHPStan if `vendor/bin/phpstan` exists (warning surfaced to the model) |
+| `tscCheck` | After Write / Edit on `*.ts` / `*.tsx` | Runs TypeScript type-check if `tsconfig.json` exists (warning surfaced to the model) |
+
+**Optional layer** (silently skipped when the tool is missing):
+
+| Hook | Needs | Effect |
+|---|---|---|
+| `file-guard` | `claudekit` | Before Read/Edit/Write: blocks access to sensitive files (`.env`, secrets) |
+| `check-any-changed` | `claudekit` | After edit/write: flags `any` types in TypeScript |
+| `check-comment-replacement` | `claudekit` | After edit: flags code replaced by explanatory comments |
+| security-guidance pattern | `python3` | After edit/write: regex warnings for ~25 dangerous patterns (XSS, SQLi, hardcoded secrets, …) |
+| `self-review` | — | On session idle after edits: injects a critical self-review prompt (once per edit-burst) |
 
 ### Skills
 
@@ -71,6 +84,16 @@ The `plugins/hooks.ts` file implements four safety and quality hooks in a single
 | `copywriter-de` | German product copywriter: product descriptions, feature announcements, technical blog posts. Benefit-first, concrete numbers, specific CTAs. Anti-AI-slop pattern kills. |
 | `marketing-copywriter-de` | German sales copywriter for non-technical readers: homepage, landing pages, booking pages. 7-step trust ladder (AIDA/PAS/BAB), CRAVENS social proof, objection removal, micro-commitment CTAs. Sales-psychology-driven structure. |
 | `seo` | On-page SEO reference: SERP pixel/character limits (title, meta description, slug), heading hierarchy, image SEO, internal/external linking, content structure, structured data (BlogPosting, BreadcrumbList, FAQPage), Open Graph, E-E-A-T, Core Web Vitals, XML sitemap, content freshness, German SEO (umlauts, Flesch DE, hreflang DACH). Includes full blog post checklist. |
+| `brainstorming` | Structured ideation before implementation — explores intent, requirements, design (superpowers) |
+| `writing-plans` | Turn a spec into a step-by-step implementation plan (superpowers) |
+| `test-driven-development` | Red-green-refactor discipline for features and bugfixes (superpowers) |
+| `systematic-debugging` | Root-cause-first debugging workflow before proposing fixes (superpowers) |
+| `verification-before-completion` | Run verification and confirm output before claiming work is done (superpowers) |
+| `requesting-code-review` | Request a structured code review before merging (superpowers) |
+| `receiving-code-review` | Handle review feedback with technical rigor, not blind agreement (superpowers) |
+| `skill-improver` | Iteratively review and fix skill quality (Trail of Bits) |
+| `ask-questions-if-underspecified` | Clarify requirements before implementing when in doubt (Trail of Bits) |
+| `agent-browser` | Browser automation CLI: navigate, fill forms, scrape, screenshot, test web apps |
 | `wondelai/clean-code` | Clean Code principles (Martin) |
 | `wondelai/clean-architecture` | Clean Architecture (Martin) |
 | `wondelai/domain-driven-design` | DDD building blocks, bounded contexts |
@@ -329,6 +352,9 @@ If you find this useful, please go and star their original repositories first.
 | `tech-colleague-de`, `copywriter-de`, `marketing-copywriter-de` | Authored for this repo — see *Writing Skills* sources below |
 | `seo` | Authored for this repo — see *SEO Skill* sources below |
 | `php`, `symfony`, `symfony-project-setup`, `shopware`, `shopware-ddev`, `shopware-utils`, `vue`, `svelte`, `typescript`, `csharp`, `aspnet-core`, `ddev-development` | Authored for this repo, distilled from each project's official documentation |
+| `brainstorming`, `writing-plans`, `test-driven-development`, `systematic-debugging`, `verification-before-completion`, `requesting-code-review`, `receiving-code-review` | [superpowers](https://github.com/obra/superpowers) by Jesse Vincent (obra) |
+| `skill-improver`, `ask-questions-if-underspecified` | [trailofbits/skills](https://github.com/trailofbits/skills) by Trail of Bits |
+| `agent-browser` | The `agent-browser` browser-automation CLI skill (invoked via `npx agent-browser`) |
 
 ### Writing Skills — Research Sources
 

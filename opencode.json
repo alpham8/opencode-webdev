@@ -36,6 +36,7 @@
   },
   "permission": {
     "bash": {
+      "*":                              "allow",
       "git push*":                      "deny",
       "git commit":                     "deny",
       "flatpak install*":               "deny",
@@ -64,8 +65,7 @@
       "sudo iptables*":                 "deny",
       "sudo firewall-cmd --permanent*": "deny",
       "sudo sysctl -w*":                "deny",
-      "rm -rf /*":                      "deny",
-      "*":                              "allow"
+      "rm -rf /*":                      "deny"
     }
   },
   "mcp": {
@@ -84,7 +84,7 @@
     "mysql": {
       "type": "local",
       "command": ["npx", "-y", "@benborla29/mcp-server-mysql"],
-      "env": {
+      "environment": {
         "MYSQL_HOST": "127.0.0.1",
         "MYSQL_PORT": "3306",
         "MYSQL_USER": "db",
@@ -98,7 +98,7 @@
     "github": {
       "type": "local",
       "command": ["npx", "-y", "@modelcontextprotocol/server-github"],
-      "env": {
+      "environment": {
         "GITHUB_PERSONAL_ACCESS_TOKEN": "{env:GITHUB_TOKEN}"
       }
     }

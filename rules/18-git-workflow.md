@@ -42,5 +42,7 @@ Examples: `feat/user-auth`, `fix/cart-total-rounding`, `refactor/order-service`.
 - **Never commit directly to `main` / `master`** — use feature branches
 - **squash your commits before merge** to maintain a clear history (unless project conventions say otherwise)
 - **use merge strategy instead of rebase** most projects are intended for teamwork, so rebase would fail
+- **Prefer fast-forward merges first** — try `git merge --ff-only` before any regular merge
+- **Create a merge commit only when fast-forward is not possible** — if `--ff-only` fails, use `git merge --no-ff`
 - **One logical change per commit** — do not mix unrelated changes
 - **Delete branches after merge** — no stale branches

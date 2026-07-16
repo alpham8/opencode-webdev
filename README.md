@@ -31,7 +31,7 @@ A single instruction file is not the right approach for implementing all rules a
 | Path | Purpose |
 |---|---|
 | `AGENTS.md` | Global engineering baseline (coding standards, workflow rules) |
-| `opencode.json` | Provider config (LiteLLM), permissions, MCP servers, skill paths |
+| `opencode.json` | OpenAI-compatible provider config (LiteLLM/vLLM), permissions, MCP servers, skill paths |
 | `rules/` | 19 rule files referenced from AGENTS.md |
 | `skills/` | 29 domain & process skills + 24 wondelai knowledge skills |
 | `plugins/hooks.ts` | Self-contained hook plugin (guard-bash, format, phpstan, tsc) + optional file-guard, static-analysis and self-review hooks |
@@ -237,7 +237,7 @@ Or follow the official guide: https://ddev.readthedocs.io/en/stable/users/instal
 
 ### 5 — LiteLLM / vLLM Access
 
-opencode-webdev is configured to use a local LLM served via [LiteLLM](https://docs.litellm.ai/) as an OpenAI-compatible proxy. You need a running LiteLLM instance with a model available (e.g. Qwen3-32B via vLLM).
+opencode-webdev is configured to use a local LLM served via [LiteLLM](https://docs.litellm.ai/) as an OpenAI-compatible proxy. You need a running LiteLLM instance with a model available (e.g. Qwen3-32B via vLLM). The custom `litellm` provider uses `@ai-sdk/openai-compatible`; it does not use opencode's built-in `openai` provider, which targets OpenAI's own API behavior.
 
 Set these environment variables in your shell profile (`~/.bashrc` or `~/.zshrc`):
 
@@ -246,7 +246,7 @@ export LITELLM_BASE_URL="https://litellm.your-host.com/v1"
 export LITELLM_API_KEY="sk-xxx"
 ```
 
-The model is configured as `openai/mai-coding-default` in `opencode.json` — adjust if your LiteLLM proxy uses a different model alias.
+The model is configured as `litellm/mai-coding-default` in `opencode.json`. If your proxy uses a different model alias, change both the top-level `model` value and the key under `provider.litellm.models`.
 
 ---
 
@@ -264,7 +264,7 @@ The installer copies all configuration into `~/.config/opencode`:
 
 | Target | Content |
 |---|---|
-| `~/.config/opencode/opencode.json` | Provider config (LiteLLM), permissions, MCP servers, skill paths |
+| `~/.config/opencode/opencode.json` | OpenAI-compatible provider config (LiteLLM/vLLM), permissions, MCP servers, skill paths |
 | `~/.config/opencode/AGENTS.md` | Global engineering baseline |
 | `~/.config/opencode/rules/` | 19 coding rules |
 | `~/.config/opencode/skills/` | 18 domain skills + 24 wondelai knowledge skills |

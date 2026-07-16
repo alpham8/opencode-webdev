@@ -1,11 +1,18 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "openai/mai-coding-default",
+  "model": "litellm/mai-coding-default",
   "provider": {
-    "openai": {
+    "litellm": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "LiteLLM (OpenAI-compatible)",
       "options": {
         "baseURL": "{env:LITELLM_BASE_URL}",
         "apiKey": "{env:LITELLM_API_KEY}"
+      },
+      "models": {
+        "mai-coding-default": {
+          "name": "MAI Coding (local)"
+        }
       }
     }
   },

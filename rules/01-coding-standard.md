@@ -69,3 +69,23 @@ Splitting attributes across multiple lines breaks whitespace-removal tools in HT
 ```
 
 This applies to all HTML, Twig, and template files. The 120-character limit does **not** apply to HTML element lines.
+
+### PHP: `declare(strict_types=1)` on Its Own Line (PSR-12)
+
+Per PSR-12's file layout rules, the opening `<?php` tag stands alone on its own line, followed by a blank line, then the `declare(strict_types=1);` statement alone on its own line, followed by a blank line before the namespace declaration. Never combine `<?php` and `declare(strict_types=1);` on the same line.
+
+```php
+// ❌ Bad — combined on one line
+<?php declare(strict_types=1);
+
+namespace Vendor\Package;
+
+// ✅ Good — each on its own line, blank line separated
+<?php
+
+declare(strict_types=1);
+
+namespace Vendor\Package;
+```
+
+This applies to every new or edited PHP file.

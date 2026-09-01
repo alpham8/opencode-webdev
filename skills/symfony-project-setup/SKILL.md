@@ -779,43 +779,159 @@ if (file_exists(dirname(__DIR__) . '/config/bootstrap.php')) {
 
 ---
 
-## 11. Deployment Script
+## 11. Deployment Process
 
-### `deploy-prod.sh`
+All Symfony projects follow the same deployment pattern: local pre-flight checks, local asset build, local composer prod install, rsync to server, remote cache/migration, restore local dev state.
+
+### Pipeline Overview
+
+```
+1. Pre-Deploy Gates (abort on failure)
+   ├── PHPUnit
+   ├── lint:twig
+   ├── lint:yaml
+   └── lint:container
+2. Asset Build + Verification
+3. Composer install --no-dev (local, inside DDEV)
+4. rsync to production server
+5. Remote: cache:clear (triggers CacheWarmers)
+6. Remote: doctrine:migrations:migrate
+7. Remote: messenger:stop-workers (if applicable)
+8. Restore local dev dependencies
+```
+
+### `deploy-prod.sh` (Template)
 
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
 
-SERVER="user@server"
-TARGET="/srv/www/vhosts/example.com/httpdocs"
+# ── Configuration ────────────────────────────────────────────────
+TARGET_DIR="/srv/www/vhosts/example.com/httpdocs/"
+SERVER="suse16"
+OWNER_USER="nginx"
+OWNER_GROUP="nginx"
 
-echo "=== Building assets ==="
-npm run build
+echo "🚀 Starte Deployment..."
 
-echo "=== Syncing files ==="
-rsync -avz --delete \
-    --exclude='.ddev/' \
-    --exclude='.idea/' \
-    --exclude='.git/' \
-    --exclude='node_modules/' \
-    --exclude='var/' \
-    --exclude='tests/' \
-    --exclude='.env.local' \
-    --exclude='templates/assets/ts/' \
-    --exclude='templates/assets/scss/' \
-    --exclude='templates/assets/js/src/' \
-    ./ "${SERVER}:${TARGET}/"
+# ── Pre-Deploy Gates ─────────────────────────────────────────────
+# All gates run inside DDEV. Any failure aborts the deploy (set -e).
+echo "🔍 Pre-Deploy-Prüfungen..."
 
-echo "=== Running remote commands ==="
-ssh "${SERVER}" "cd ${TARGET} && \
-    composer install --no-dev --optimize-autoloader && \
-    bin/console cache:clear --env=prod && \
-    bin/console doctrine:migrations:migrate --no-interaction && \
-    chown -R nginx:nginx var/"
+echo "  ▸ PHPUnit..."
+ddev exec vendor/bin/phpunit
 
-echo "=== Deploy complete ==="
+echo "  ▸ Twig-Lint..."
+ddev exec bin/console lint:twig templates/
+
+echo "  ▸ YAML-Lint..."
+ddev exec bin/console lint:yaml translations/ config/
+
+echo "  ▸ Container-Lint..."
+ddev exec bin/console lint:container
+
+echo "✅ Alle Pre-Deploy-Prüfungen bestanden."
+
+# ── Asset Build + Verification ───────────────────────────────────
+ddev exec npm run build
+
+for asset in public/assets/css/all.css public/assets/js/app.js; do
+    if [ ! -s "$asset" ]; then
+        echo "❌ Kritisches Asset fehlt oder ist leer: $asset"
+        exit 1
+    fi
+done
+
+echo "🏗️ Assets erfolgreich gebaut und verifiziert."
+
+# ── Composer: Strip Dev Dependencies ─────────────────────────────
+# Install production-only deps locally so rsync sends a clean vendor/.
+ddev exec composer install --no-dev --classmap-authoritative --no-scripts --no-interaction
+
+echo "📦 Composer-Dependencies (ohne Dev) lokal installiert."
+
+# ── Rsync ────────────────────────────────────────────────────────
+# --chown sets ownership on the remote side (requires rsync 3.1+).
+# --delete removes files on remote that no longer exist locally.
+rsync -av -zz --delete --stats \
+    --chown="$OWNER_USER:$OWNER_GROUP" \
+    --exclude=".ddev" --exclude=".idea" --exclude="/var/" \
+    --exclude=".env" --exclude=".env.*" --exclude="node_modules" \
+    --exclude=".git" --exclude=".gitignore" --exclude=".editorconfig" \
+    --exclude=".claude" --exclude=".ralph" --exclude=".ralphrc" \
+    --exclude="CLAUDE.md" --exclude="code-conventions.md" \
+    --exclude="templates/assets/node" --exclude="templates/assets/ts" \
+    --exclude="templates/assets/js" --exclude="templates/assets/scss" \
+    --exclude="vite.config.js" --exclude="tsconfig.json" \
+    --exclude="package.json" --exclude="package-lock.json" \
+    --exclude="deploy-prod.sh" --exclude="deploy-stage.sh" \
+    --exclude="phpunit.xml.dist" --exclude="tests/" --exclude="e2e/" \
+    --exclude="playwright.config.*" \
+    --exclude=".htmlvalidate.json" \
+    /path/to/project/ "$SERVER:$TARGET_DIR"
+
+echo "✅ Dateien erfolgreich synchronisiert (Owner: $OWNER_USER:$OWNER_GROUP)."
+
+# ── Remote: Cache Clear ──────────────────────────────────────────
+# Runs as web server user. Triggers all CacheWarmerInterface implementations.
+ssh "$SERVER" "cd $TARGET_DIR && sudo -u $OWNER_USER ./bin/console cache:clear"
+
+echo "🧹 Symfony Cache wurde erfolgreich geleert!"
+
+# ── Remote: Doctrine Migrations ──────────────────────────────────
+ssh "$SERVER" "cd $TARGET_DIR && sudo -u $OWNER_USER ./bin/console doctrine:migrations:migrate --no-interaction"
+
+echo "📦 Datenbank-Migration erfolgreich durchgeführt."
+
+# ── Remote: Restart Messenger Workers (if applicable) ────────────
+# Uncomment if the project uses Symfony Messenger:
+# ssh "$SERVER" "cd $TARGET_DIR && sudo -u $OWNER_USER ./bin/console messenger:stop-workers" || true
+
+# ── Restore Local Dev Dependencies ───────────────────────────────
+ddev exec composer install --no-interaction
+
+echo "🔄 Composer Dev-Dependencies lokal wiederhergestellt."
+
+echo "🎉 Deployment erfolgreich abgeschlossen."
 ```
+
+### Key Design Decisions
+
+| Decision | Rationale |
+|----------|-----------|
+| Pre-deploy gates run in DDEV | Tests use the same PHP/DB as dev — no "works on my machine" |
+| `set -euo pipefail` | Any failing gate aborts the entire deploy |
+| Asset verification loop | Catches silent build failures (empty CSS/JS) |
+| Composer `--no-dev` locally | rsync sends a clean `vendor/` without dev packages — no composer needed on server |
+| `--chown` in rsync | Sets ownership atomically during transfer — no separate `chown -R` ssh call needed |
+| `--delete` in rsync | Removes orphaned files on remote (clean deploys) |
+| `cache:clear` via `sudo -u nginx` | Web server user must own the generated cache files |
+| Restore dev deps at end | Local dev environment stays functional after deploy |
+
+### Rsync Excludes (Standard Set)
+
+These excludes apply to all projects. Add project-specific excludes as needed.
+
+| Category | Excludes |
+|----------|----------|
+| Dev environment | `.ddev`, `.idea`, `node_modules` |
+| Git / editor | `.git`, `.gitignore`, `.editorconfig` |
+| AI tooling | `.claude`, `.ralph`, `.ralphrc`, `CLAUDE.md` |
+| Secrets | `.env`, `.env.*` |
+| Source files | `templates/assets/ts`, `templates/assets/scss`, `templates/assets/js`, `templates/assets/node` |
+| Build config | `vite.config.js`, `tsconfig.json`, `package.json`, `package-lock.json` |
+| Test infra | `tests/`, `e2e/`, `phpunit.xml.dist`, `playwright.config.*`, `.htmlvalidate.json` |
+| Deploy scripts | `deploy-prod.sh`, `deploy-stage.sh` |
+| Runtime dirs | `/var/` (logs, cache — rebuilt on remote via `cache:clear`) |
+
+### Project-Specific Variations
+
+When adapting the template, common variations include:
+
+- **No database**: Comment out the `doctrine:migrations:migrate` step
+- **Messenger workers**: Uncomment `messenger:stop-workers` to signal graceful restart
+- **CacheWarmers**: Projects with `CacheWarmerInterface` implementations (e.g. blog HTML cache) get their caches rebuilt automatically during `cache:clear`
+- **Extra excludes**: Add project-specific entries (e.g. `public/blog-cache` for filesystem caches rebuilt by warmers)
 
 ---
 
@@ -909,5 +1025,5 @@ class ContactType extends AbstractType
 - [ ] Altcha CAPTCHA: constraint, validator, form type, widget template, challenge route
 - [ ] `phpunit.xml.dist` + `tests/bootstrap.php`
 - [ ] Custom `ErrorController` with error templates
-- [ ] `deploy-prod.sh` with rsync + remote cache clear + migrations
+- [ ] `deploy-prod.sh` with pre-deploy gates, asset build+verify, composer `--no-dev`, rsync, remote cache:clear + migrations, dev restore
 - [ ] First commit: `.gitignore` includes `.env.local`, `var/`, `vendor/`, `node_modules/`, `public/assets/js/`

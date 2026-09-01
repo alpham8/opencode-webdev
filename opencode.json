@@ -36,7 +36,8 @@
     "~/.config/opencode/rules/16-accessibility.md",
     "~/.config/opencode/rules/17-i18n.md",
     "~/.config/opencode/rules/18-git-workflow.md",
-    "~/.config/opencode/rules/19-css.md"
+    "~/.config/opencode/rules/19-css.md",
+    "~/.config/opencode/rules/20-cpp.md"
   ],
   "skills": {
     "paths": ["~/.config/opencode/skills", "~/.config/opencode/skills/wondelai"]

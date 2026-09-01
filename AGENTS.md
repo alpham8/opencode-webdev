@@ -20,11 +20,11 @@ Project-local files always override this baseline:
 
 ## Coding Rules (always active)
 
-The following 19 rule files are loaded via `opencode.json → instructions`
+The following 20 rule files are loaded via `opencode.json → instructions`
 and apply to every session:
 
 01-coding-standard · 02-security · 03-type-system · 04-clean-code ·
 05-complexity · 06-maintainability · 07-js-ts-tooling · 08-vue-svelte ·
 09-testing · 10-environment · 11-boundaries · 12-performance ·
 13-database · 14-dependencies · 15-observability · 16-accessibility ·
-17-i18n · 18-git-workflow · 19-css
+17-i18n · 18-git-workflow · 19-css · 20-cpp

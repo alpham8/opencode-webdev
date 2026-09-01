@@ -21,7 +21,7 @@ A single instruction file is not the right approach for implementing all rules a
 - **ECMAScript Skills** — TypeScript type system, Vue 2/3, Svelte 5, async patterns, decorators
 - **Content Testing** — Deep assertion skill ensuring tests verify actual content, not just status codes. 4-level depth pyramid, checklists for pages, APIs, feeds, forms, SEO, i18n
 - **Accessibility** — WCAG 2.1 AA checklist, keyboard navigation, ARIA, form accessibility
-- **19 Coding Rules** — PSR-12 baseline, security, type safety, clean code, performance, testing, git workflow, CSS Box Model ordering
+- **20 Coding Rules** — PSR-12 baseline, security, type safety, clean code, performance, testing, git workflow, CSS Box Model ordering, C++ conventions
 - **3 German Writing Skills** — Technical colleague voice, product copywriter, marketing copywriter (sales-psychology, trust ladder, anti-AI-slop)
 - **SEO Skill** — On-page SEO reference for blog posts and landing pages: SERP limits (title, meta, slug), heading hierarchy, image SEO, structured data (BlogPosting, BreadcrumbList, FAQPage), Open Graph, E-E-A-T, Core Web Vitals, German SEO specifics (umlauts, Flesch DE, hreflang DACH)
 - **Hook Plugin** — Format-on-save, static analysis, type checking, destructive command guard (single TypeScript plugin)
@@ -77,6 +77,7 @@ The `plugins/hooks.ts` file is a single TypeScript module with a **self-containe
 | `csharp` | Modern C# 12/13, records, pattern matching, nullable refs, LINQ, async/await, sealed classes, primary constructors |
 | `aspnet-core` | ASP.NET Core 9 Minimal APIs, DI, middleware, EF Core, SignalR, JWT auth, caching, MassTransit, rate limiting, Docker |
 | `ddev-development` | DDEV commands, config reference, PHP/Node/DB version switching, port exposure |
+| `mixxx-cpp` | Mixxx DJ software C++ development: architecture patterns, beat system, waveform rendering, protobuf serialization, analyzer pipeline, Track Properties dialog |
 | `ui-animation-engineering` | Production-grade animation decisions: timing tables, easing rules, spring vs duration, transform-origin, interruptibility, stagger patterns, Sonner principles (based on Emil Kowalski) |
 | `ui-audit-redesign` | Systematic UI audit & upgrade workflow: Scan/Diagnose/Fix, anti-AI-slop patterns, typography/colour/layout/states audit, fix priority order, pre-output checklist (based on Taste Skill & Impeccable) |
 | `content-testing` | Deep assertion skill for tests: 4-level assertion depth pyramid (response → structure → content → semantics), checklists for web pages, APIs, RSS/XML, forms, SEO, multilingual, pagination. Prevents status-code-only tests. |
@@ -351,7 +352,7 @@ If you find this useful, please go and star their original repositories first.
 | `content-testing` | Authored for this repo |
 | `tech-colleague-de`, `copywriter-de`, `marketing-copywriter-de` | Authored for this repo — see *Writing Skills* sources below |
 | `seo` | Authored for this repo — see *SEO Skill* sources below |
-| `php`, `symfony`, `symfony-project-setup`, `shopware`, `shopware-ddev`, `shopware-utils`, `vue`, `svelte`, `typescript`, `csharp`, `aspnet-core`, `ddev-development` | Authored for this repo, distilled from each project's official documentation |
+| `php`, `symfony`, `symfony-project-setup`, `shopware`, `shopware-ddev`, `shopware-utils`, `vue`, `svelte`, `typescript`, `csharp`, `aspnet-core`, `ddev-development`, `mixxx-cpp` | Authored for this repo, distilled from each project's official documentation |
 | `brainstorming`, `writing-plans`, `test-driven-development`, `systematic-debugging`, `verification-before-completion`, `requesting-code-review`, `receiving-code-review` | [superpowers](https://github.com/obra/superpowers) by Jesse Vincent (obra) |
 | `skill-improver`, `ask-questions-if-underspecified` | [trailofbits/skills](https://github.com/trailofbits/skills) by Trail of Bits |
 | `agent-browser` | The `agent-browser` browser-automation CLI skill (invoked via `npx agent-browser`) |

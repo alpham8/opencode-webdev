@@ -72,6 +72,46 @@ custom/plugins/SwagExample/
 └── composer.json
 ```
 
+### Plugin Deployment Patterns
+
+**`custom/static-plugins/` for project-specific code:**
+
+For larger Shopware projects, client-specific plugins and themes that are not published to the Shopware Store are placed in `custom/static-plugins/` instead of `custom/plugins/`. This directory is symlinked into `vendor/` via Composer's `path` repository type:
+
+```json
+{
+    "repositories": [
+        { "type": "path", "url": "custom/static-plugins/MyPlugin" }
+    ],
+    "require": {
+        "vendor/my-plugin": "*"
+    }
+}
+```
+
+Composer creates a symlink `vendor/vendor/my-plugin → ../../custom/static-plugins/MyPlugin/`. This ensures the plugin is autoloaded via Composer's classloader and follows the same dependency resolution as Store plugins, while keeping project-specific code clearly separated and version-controlled in the project repository.
+
+**Shopware Store as Composer repository:**
+
+The Shopware Plugin Store can be added as a Composer repository to install Store plugins via `composer require` instead of manual upload:
+
+```json
+{
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.shopware.com"
+        }
+    ]
+}
+```
+
+Store plugins are then installed with: `composer require store.shopware.com/pluginname`.
+
+**Shopware Partner wildcard environments:**
+
+Shopware Partners can set up wildcard test environments. These allow testing any Store plugin before purchasing, so agencies can evaluate plugins for clients without incurring costs upfront. The wildcard license covers all plugins on the test domain.
+
 **Plugin base class** (`src/SwagExample.php`):
 
 ```php
@@ -1189,6 +1229,10 @@ For plugins supporting both version ranges: maintain two separate admin template
 9. **Custom entity tag** — `shopware.entity.definition` entity attribute must match `ENTITY_NAME` constant.
 10. **CMS `initElementConfig()`** — must be called in both component AND config; skipping causes undefined config values.
 11. **Store API abstract pattern** — always create Abstract → Concrete → optional Decorators; inject `AbstractXRoute` in consumers.
+12. **ArrayStruct + Twig `.count`** — `ArrayStruct` implements `\Countable`. In Twig, `.count` resolves to the `count()` method (returns number of keys), not to a key named `count`. Use a different key name like `total` to avoid collision: `new ArrayStruct(['total' => $value])`.
+13. **CMS slot `getData()` types** — `$slot->getData()` for a `category-navigation` CMS element returns a `Tree` object, not a generic `Struct`. Use `$data->getTree()` (returns `TreeItem[]`), not `$data->get('tree')`.
+14. **Sidebar filter styles must scope to desktop** — Custom SCSS for `.is--sidebar` and `.cms-element-sidebar-filter .filter-panel-wrapper` must be wrapped in `@include media-breakpoint-up(lg)`. Without this, the mobile offcanvas filter panel breaks because `display: block` overrides the offcanvas hidden state.
+15. **`.nav-main` is a sibling of `.header-main`** — The main navigation bar is outside the header element in the DOM. It can be made `position: sticky` independently without affecting the header (logo, search, cart).
 
 ---
 
